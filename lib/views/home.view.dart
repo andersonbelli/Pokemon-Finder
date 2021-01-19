@@ -150,6 +150,7 @@ class _HomeViewState extends State<HomeView> {
     if (searchStore.searchIcon == Icons.cancel) {
       homeStore.updateCurrentList(homeStore.loadedList);
       searchStore.setSearchBoxIcon(Icons.search);
+      homeStore.changeListName("Pokemon");
       searchStore.setSearchBoxWidth();
     } else if (searchStore.searchBoxWidth != 0 &&
         _searchBoxTextController.text.isNotEmpty) {
