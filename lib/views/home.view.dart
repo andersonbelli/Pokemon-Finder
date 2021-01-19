@@ -124,6 +124,14 @@ class _HomeViewState extends State<HomeView> {
                         ),
                         onPressed: () {
                           homeStore.changeSortIcon();
+                          homeStore.updateCurrentList(
+                            _pokemonController.sortListByName(
+                              homeStore.currentList,
+                              homeStore.sortIcon == Icons.arrow_upward
+                                  ? true
+                                  : false,
+                            ),
+                          );
                         }),
                   ],
                 ),
@@ -165,8 +173,9 @@ class _HomeViewState extends State<HomeView> {
         searchStore.setSearchBoxWidth();
       } else {
         homeStore.updateCurrentList(filterResult);
-        homeStore.changeListName(_searchBoxTextController.text);
+        homeStore.changeListName("Search: ${_searchBoxTextController.text}");
         searchStore.setSearchBoxIcon(Icons.cancel);
+        searchStore.setSearchBoxWidth();
       }
 
       FocusScope.of(context).unfocus();

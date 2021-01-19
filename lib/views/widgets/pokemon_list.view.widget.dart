@@ -24,8 +24,10 @@ class PokemonList extends StatelessWidget {
 
     return _searchList.isEmpty
         ? FutureBuilder(
-            // future: _controller.getPokemonList(),
-            future: _controller.filterBySelectedTypes(_itemsList),
+            future: _controller.loadHomeList(
+              _itemsList,
+              homeStore.sortIcon == Icons.arrow_upward ? true : false,
+            ),
             builder: (context, snapshot) {
               switch (snapshot.connectionState) {
                 case ConnectionState.none:

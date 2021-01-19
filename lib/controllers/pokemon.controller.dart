@@ -19,6 +19,11 @@ class PokemonController implements PokemonInterface {
     return listPokemon;
   }
 
+  Future<List<Pokemon>> loadHomeList(
+      List<PokemonType> selectedTypes, bool reversed) async {
+    return sortListByName(await filterBySelectedTypes(selectedTypes), reversed);
+  }
+
   Future<List<Pokemon>> filterBySelectedTypes(
       List<PokemonType> selectedTypes) async {
     List<Pokemon> listToConvert = await getPokemonList();
@@ -57,5 +62,17 @@ class PokemonController implements PokemonInterface {
         .toList();
 
     return resultFilter;
+  }
+
+  List<Pokemon> sortListByName(List<Pokemon> listToSort, bool reversed) {
+    listToSort.sort((a, b) {
+      return a.name.toLowerCase().compareTo(b.name.toLowerCase());
+    });
+
+    if (reversed) {
+      return listToSort;
+    } else {
+      return listToSort.reversed.toList();
+    }
   }
 }
