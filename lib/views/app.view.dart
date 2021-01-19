@@ -9,8 +9,14 @@ class AppView extends StatelessWidget {
   Widget build(BuildContext context) {
     var userStore = Provider.of<UserStore>(context);
 
-    return userStore.userViewModel.username == null
-        ? RegisterView()
-        : HomeView();
+    return Container(
+      decoration: BoxDecoration(
+          image: DecorationImage(
+              image: AssetImage("assets/introduction_bg.jpg"),
+              fit: BoxFit.fill)),
+      child: userStore.userViewModel.username == null
+          ? RegisterView()
+          : HomeView(),
+    );
   }
 }

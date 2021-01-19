@@ -34,9 +34,13 @@ class _HomeViewState extends State<HomeView> {
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
           centerTitle: true,
+          elevation: 0,
           title: Observer(
             builder: (_) => searchStore.searchBoxWidth == 0
-                ? Text("Pokemon Finder")
+                ? Text(
+                    "Pokemon Finder",
+                    style: TextStyle(color: Colors.white),
+                  )
                 : Container(
                     width: searchStore.searchBoxWidth,
                     height: 45,
@@ -70,6 +74,7 @@ class _HomeViewState extends State<HomeView> {
             Observer(
               builder: (_) => IconButton(
                   icon: Icon(searchStore.searchIcon),
+                  color: Colors.white,
                   onPressed: () {
                     makeASearch(searchStore, homeStore,
                         _searchBoxTextController, _pokemonController);
@@ -137,6 +142,7 @@ class _HomeViewState extends State<HomeView> {
                 ),
               ),
             ),
+            Divider(),
             Expanded(
               flex: 8,
               child: Observer(builder: (_) {

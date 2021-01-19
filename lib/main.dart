@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:pokemon_finder/stores/home.store.dart';
 import 'package:pokemon_finder/stores/search.store.dart';
 import 'package:pokemon_finder/stores/user.store.dart';
-import 'package:pokemon_finder/views/app.view.dart';
+import 'package:pokemon_finder/views/presentation.view.dart';
+import 'package:pokemon_finder/views/register.view.dart';
 import 'package:provider/provider.dart';
 
 void main() {
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    statusBarColor: Colors.transparent,
+  ));
+
   runApp(MyApp());
 }
 
@@ -22,7 +28,8 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'Pokemon Finder',
         theme: ThemeData(
-          primarySwatch: Colors.green,
+          // primarySwatch: Colors.green,
+          primaryColor: Color.fromRGBO(42, 198, 161, 1),
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
         home: Container(
@@ -35,7 +42,7 @@ class MyApp extends StatelessWidget {
             body: SafeArea(
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: AppView(),
+                child: PresentationView(),
               ),
             ),
           ),

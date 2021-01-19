@@ -10,7 +10,6 @@
   - Sort list;
 
 ### TODO:
-  - Improve layout in all screens;
   - If user already have login, list in seconds screen should be filled;
   - Implement tests;
   - Add new functionality: Show not selected "Types" in homeView in gray, allowing user to select them;

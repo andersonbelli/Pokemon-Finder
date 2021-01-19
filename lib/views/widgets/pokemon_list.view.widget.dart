@@ -46,16 +46,22 @@ class PokemonList extends StatelessWidget {
                       itemBuilder: (context, i) {
                         Pokemon item = snapshot.data[i];
 
-                        return ListTile(
-                          leading: CircleAvatar(
-                            backgroundColor: Colors.blue.shade100,
-                            maxRadius: 23,
-                            backgroundImage: NetworkImage(item.thumbnailImage),
-                          ),
-                          title: Text(
-                            item.name,
-                            style: TextStyle(fontSize: 18),
-                          ),
+                        return Column(
+                          children: [
+                            ListTile(
+                              leading: CircleAvatar(
+                                backgroundColor: Colors.blue.shade100,
+                                maxRadius: 23,
+                                backgroundImage:
+                                    NetworkImage(item.thumbnailImage),
+                              ),
+                              title: Text(
+                                item.name,
+                                style: TextStyle(fontSize: 18),
+                              ),
+                            ),
+                            Divider()
+                          ],
                         );
                       });
                   break;
