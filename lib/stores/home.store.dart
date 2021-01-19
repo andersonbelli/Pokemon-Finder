@@ -11,6 +11,9 @@ class HomeStore = _HomeStore with _$HomeStore;
 //  flutter packages pub run build_runner build --delete-conflicting-outputs
 abstract class _HomeStore with Store {
   @observable
+  List<Pokemon> loadedList = new List<Pokemon>().asObservable();
+
+  @observable
   List<Pokemon> currentList = new List<Pokemon>().asObservable();
 
   @action

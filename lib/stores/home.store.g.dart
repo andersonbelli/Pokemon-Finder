@@ -9,6 +9,21 @@ part of 'home.store.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
 mixin _$HomeStore on _HomeStore, Store {
+  final _$loadedListAtom = Atom(name: '_HomeStore.loadedList');
+
+  @override
+  List<Pokemon> get loadedList {
+    _$loadedListAtom.reportRead();
+    return super.loadedList;
+  }
+
+  @override
+  set loadedList(List<Pokemon> value) {
+    _$loadedListAtom.reportWrite(value, super.loadedList, () {
+      super.loadedList = value;
+    });
+  }
+
   final _$currentListAtom = Atom(name: '_HomeStore.currentList');
 
   @override
@@ -66,6 +81,7 @@ mixin _$HomeStore on _HomeStore, Store {
   @override
   String toString() {
     return '''
+loadedList: ${loadedList},
 currentList: ${currentList},
 typesList: ${typesList}
     ''';

@@ -11,5 +11,4 @@
 ### TODO:
   - Improve layout in all screens;
   - If user already have login, list in seconds screen should be filled;
-  - Improve search (Fields to search, icon stuck in "cancel", show somewere that the list showing is from search);
   - Implement tests;
