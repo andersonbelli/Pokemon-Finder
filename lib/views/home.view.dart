@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:pokemon_finder/controllers/pokemon.controller.dart';
 import 'package:pokemon_finder/models/pokemon.model.dart';
@@ -17,10 +18,7 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
-  double _searchBoxWidth = 0;
-  List<Pokemon> searchList = [];
-
-  IconData _sortIcon = Icons.arrow_upward;
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
@@ -34,6 +32,7 @@ class _HomeViewState extends State<HomeView> {
         new TextEditingController();
 
     return Scaffold(
+        key: _scaffoldKey,
         appBar: AppBar(
           centerTitle: true,
           title: Observer(
@@ -43,7 +42,16 @@ class _HomeViewState extends State<HomeView> {
                     width: searchStore.searchBoxWidth,
                     height: 45,
                     child: TextField(
+                      maxLines: 1,
+                      inputFormatters: [
+                        LengthLimitingTextInputFormatter(20),
+                      ],
+                      expands: false,
+                      maxLengthEnforced: false,
+                      onSubmitted: (_) => makeASearch(searchStore, homeStore,
+                          _searchBoxTextController, _pokemonController),
                       decoration: InputDecoration(
+                        counterText: "",
                         labelText: "Search",
                         floatingLabelBehavior: FloatingLabelBehavior.never,
                         filled: true,
@@ -64,23 +72,8 @@ class _HomeViewState extends State<HomeView> {
               builder: (_) => IconButton(
                   icon: Icon(searchStore.searchIcon),
                   onPressed: () {
-                    if (searchStore.searchIcon == Icons.cancel) {
-                      homeStore.updateCurrentList(loadedList);
-                      searchStore.setSearchBoxIcon(Icons.search);
-                      searchStore.setSearchBoxWidth();
-                    } else if (searchStore.searchBoxWidth != 0 &&
-                        _searchBoxTextController.text.isNotEmpty) {
-                      List<Pokemon> filterResult =
-                          _pokemonController.filterListToSearchedValue(
-                        _searchBoxTextController.text,
-                        loadedList,
-                      );
-
-                      homeStore.updateCurrentList(filterResult);
-                      searchStore.setSearchBoxIcon(Icons.cancel);
-                    } else {
-                      searchStore.setSearchBoxWidth();
-                    }
+                    makeASearch(searchStore, homeStore,
+                        _searchBoxTextController, _pokemonController);
                   }),
             )
           ],
@@ -97,15 +90,23 @@ class _HomeViewState extends State<HomeView> {
             Expanded(
               flex: 1,
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                padding: const EdgeInsets.only(right: 8.0, left: 16),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      "Pokemon",
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.grey,
+                    Flexible(
+                      fit: FlexFit.loose,
+                      child: Observer(
+                        builder: (_) => SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Text(
+                            homeStore.listName,
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ),
                       ),
                     ),
                     FlatButton(
@@ -119,10 +120,12 @@ class _HomeViewState extends State<HomeView> {
                               ),
                             ),
                             SizedBox(width: 8),
-                            Icon(_sortIcon)
+                            Observer(builder: (_) => Icon(homeStore.sortIcon)),
                           ],
                         ),
-                        onPressed: () {}),
+                        onPressed: () {
+                          homeStore.changeSortIcon();
+                        }),
                   ],
                 ),
               ),
@@ -138,5 +141,43 @@ class _HomeViewState extends State<HomeView> {
             )
           ],
         ));
+  }
+
+  void makeASearch(
+      SearchStore searchStore,
+      HomeStore homeStore,
+      TextEditingController _searchBoxTextController,
+      PokemonController _pokemonController) {
+    if (searchStore.searchIcon == Icons.cancel) {
+      homeStore.updateCurrentList(loadedList);
+      searchStore.setSearchBoxIcon(Icons.search);
+      searchStore.setSearchBoxWidth();
+    } else if (searchStore.searchBoxWidth != 0 &&
+        _searchBoxTextController.text.isNotEmpty) {
+      List<Pokemon> filterResult = _pokemonController.filterListToSearchedValue(
+        _searchBoxTextController.text,
+        loadedList,
+      );
+
+      if (filterResult.length == 0) {
+        showSnackBar(
+            scaffoldKey: _scaffoldKey, message: 'Sorry, nothing was found 😔');
+        searchStore.setSearchBoxWidth();
+      } else {
+        homeStore.updateCurrentList(filterResult);
+        homeStore.changeListName(_searchBoxTextController.text);
+        searchStore.setSearchBoxIcon(Icons.cancel);
+      }
+
+      FocusScope.of(context).unfocus();
+    } else {
+      searchStore.setSearchBoxWidth();
+    }
+  }
+
+  void showSnackBar({@required scaffoldKey, @required String message}) {
+    final snackBar =
+        SnackBar(backgroundColor: Colors.red.shade900, content: Text(message));
+    scaffoldKey.currentState.showSnackBar(snackBar);
   }
 }

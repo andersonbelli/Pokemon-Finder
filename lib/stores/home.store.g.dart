@@ -54,6 +54,36 @@ mixin _$HomeStore on _HomeStore, Store {
     });
   }
 
+  final _$listNameAtom = Atom(name: '_HomeStore.listName');
+
+  @override
+  String get listName {
+    _$listNameAtom.reportRead();
+    return super.listName;
+  }
+
+  @override
+  set listName(String value) {
+    _$listNameAtom.reportWrite(value, super.listName, () {
+      super.listName = value;
+    });
+  }
+
+  final _$sortIconAtom = Atom(name: '_HomeStore.sortIcon');
+
+  @override
+  IconData get sortIcon {
+    _$sortIconAtom.reportRead();
+    return super.sortIcon;
+  }
+
+  @override
+  set sortIcon(IconData value) {
+    _$sortIconAtom.reportWrite(value, super.sortIcon, () {
+      super.sortIcon = value;
+    });
+  }
+
   final _$_HomeStoreActionController = ActionController(name: '_HomeStore');
 
   @override
@@ -79,11 +109,35 @@ mixin _$HomeStore on _HomeStore, Store {
   }
 
   @override
+  void changeListName(String newName) {
+    final _$actionInfo = _$_HomeStoreActionController.startAction(
+        name: '_HomeStore.changeListName');
+    try {
+      return super.changeListName(newName);
+    } finally {
+      _$_HomeStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void changeSortIcon() {
+    final _$actionInfo = _$_HomeStoreActionController.startAction(
+        name: '_HomeStore.changeSortIcon');
+    try {
+      return super.changeSortIcon();
+    } finally {
+      _$_HomeStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
 loadedList: ${loadedList},
 currentList: ${currentList},
-typesList: ${typesList}
+typesList: ${typesList},
+listName: ${listName},
+sortIcon: ${sortIcon}
     ''';
   }
 }

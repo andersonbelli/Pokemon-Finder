@@ -28,4 +28,22 @@ abstract class _HomeStore with Store {
   void updateTypesList(List<PokemonType> updatedList) {
     this.typesList = updatedList;
   }
+
+  @observable
+  String listName = "Pokemon";
+
+  @action
+  void changeListName(String newName) {
+    this.listName = newName;
+  }
+
+  @observable
+  IconData sortIcon = Icons.arrow_upward;
+
+  @action
+  void changeSortIcon() {
+    this.sortIcon == Icons.arrow_upward
+        ? this.sortIcon = Icons.arrow_downward
+        : this.sortIcon = Icons.arrow_upward;
+  }
 }
