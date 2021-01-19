@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:pokemon_finder/controllers/pokemon_types.controller.dart';
 import 'package:pokemon_finder/controllers/user.controller.dart';
 import 'package:pokemon_finder/models/pokemon_type.model.dart';
-import 'package:pokemon_finder/models/user.model.dart';
 import 'package:pokemon_finder/repositories/user.repository.dart';
+import 'package:pokemon_finder/stores/home.store.dart';
 import 'package:pokemon_finder/stores/user.store.dart';
 import 'package:pokemon_finder/view_models/user.viewmodel.dart';
 import 'package:pokemon_finder/views/home.view.dart';
@@ -30,6 +31,8 @@ class _SelectFavouritePokemonViewState
   List<String> _selected = [];
   List<PokemonType> _types = [];
 
+  bool loadingList = false;
+
   List<Map<String, dynamic>> types = [
     {
       "thumbnailImage":
@@ -56,6 +59,7 @@ class _SelectFavouritePokemonViewState
   @override
   Widget build(BuildContext context) {
     var userStore = Provider.of<UserStore>(context);
+    var homeStore = Provider.of<HomeStore>(context);
 
     return Container(
         decoration: BoxDecoration(
@@ -100,63 +104,80 @@ class _SelectFavouritePokemonViewState
                           style: TextStyle(fontSize: 20),
                         ),
                       ),
-                      SmartSelect<String>.multiple(
-                          title: 'Select one type or more',
-                          placeholder: '',
-                          // value: _types,
-                          value: _selected,
-                          // onChange: (state) =>
-                          // setState(() => _types = state.value),
-                          onChange: (state) {
-                            _types.clear();
-                            _selected = state.value;
+                      loadingList
+                          ? Column(
+                              children: [
+                                Container(
+                                  margin:
+                                      const EdgeInsets.symmetric(vertical: 20),
+                                  child: CircularProgressIndicator(),
+                                ),
+                                Text(
+                                  "Loading types...",
+                                  style: TextStyle(fontSize: 16),
+                                )
+                              ],
+                            )
+                          : SmartSelect<String>.multiple(
+                              title: 'Select one or more types',
+                              placeholder: '',
+                              value: _selected,
+                              onChange: (state) {
+                                _types.clear();
+                                _selected = state.value;
 
-                            setState(() => state.value.forEach((element) =>
-                                _types.add(PokemonType(
-                                    thumbnailImage: element,
-                                    name: state.valueTitle[_types.length]))));
-                          },
-                          choiceItems: S2Choice.listFrom<String, Map>(
-                            source: types,
-                            value: (index, item) => item['thumbnailImage'],
-                            title: (index, item) => item['name'],
-                          ),
-                          choiceTitleBuilder: (context, choice, value) {
-                            return Container(
-                              child: Row(
-                                children: [
-                                  CircleAvatar(
-                                    backgroundImage: NetworkImage(choice.value),
-                                    backgroundColor: Colors.transparent,
+                                setState(
+                                  () => state.value.forEach(
+                                    (element) => _types.add(
+                                      PokemonType(
+                                          thumbnailImage: element,
+                                          name:
+                                              state.valueTitle[_types.length]),
+                                    ),
                                   ),
-                                  VerticalDivider(),
-                                  Text(
-                                    choice.title.toUpperCase(),
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold),
-                                  )
-                                ],
+                                );
+                              },
+                              choiceItems: S2Choice.listFrom<String, Map>(
+                                source: types,
+                                value: (index, item) => item['thumbnailImage'],
+                                title: (index, item) => item['name'],
                               ),
-                            );
-                          },
-                          modalType: S2ModalType.bottomSheet,
-                          modalConfirm: true,
-                          modalFilter: true,
-                          tileBuilder: (context, state) {
-                            return S2Tile.fromState(
-                              state,
-                              trailing: Icon(
-                                Icons.keyboard_arrow_down,
-                                color: Colors.white,
-                              ),
-                              isTwoLine: true,
-                              body: const Divider(
-                                indent: 10,
-                                thickness: 2,
-                                color: Colors.white,
-                              ),
-                            );
-                          }),
+                              choiceTitleBuilder: (context, choice, value) {
+                                return Container(
+                                  child: Row(
+                                    children: [
+                                      CircleAvatar(
+                                        backgroundImage:
+                                            NetworkImage(choice.value),
+                                        backgroundColor: Colors.transparent,
+                                      ),
+                                      VerticalDivider(),
+                                      Text(
+                                        choice.title.toUpperCase(),
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold),
+                                      )
+                                    ],
+                                  ),
+                                );
+                              },
+                              modalType: S2ModalType.bottomSheet,
+                              modalConfirm: true,
+                              tileBuilder: (context, state) {
+                                return S2Tile.fromState(
+                                  state,
+                                  trailing: Icon(
+                                    Icons.keyboard_arrow_down,
+                                    color: Colors.white,
+                                  ),
+                                  isTwoLine: true,
+                                  body: const Divider(
+                                    indent: 10,
+                                    thickness: 2,
+                                    color: Colors.white,
+                                  ),
+                                );
+                              }),
                     ],
                   ),
                 ),
@@ -174,6 +195,7 @@ class _SelectFavouritePokemonViewState
                         final bool valid = await _control.validateUser(newUser);
                         if (valid) {
                           userStore.setUser(newUser);
+                          homeStore.updateTypesList(_types);
                           Navigator.pushAndRemoveUntil(
                             context,
                             MaterialPageRoute(builder: (context) => HomeView()),
@@ -197,6 +219,27 @@ class _SelectFavouritePokemonViewState
             ],
           ),
         ));
+  }
+
+  @override
+  void initState() {
+    final _pokemonTypesController = PokemonTypesController();
+
+    loadingList = true;
+
+    _pokemonTypesController
+        .convertPokemonTypeToMap()
+        .then((value) {
+          setState(() {
+            types = value;
+          });
+        })
+        .whenComplete(() => loadingList = false)
+        .catchError((e) {
+          print(e.toString());
+        });
+
+    super.initState();
   }
 
   void showSnackBar({@required scaffoldKey, @required String message}) {

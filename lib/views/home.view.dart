@@ -1,17 +1,13 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:pokemon_finder/controllers/pokemon.controller.dart';
 import 'package:pokemon_finder/models/pokemon.model.dart';
 import 'package:pokemon_finder/models/pokemon_type.model.dart';
 import 'package:pokemon_finder/stores/home.store.dart';
 import 'package:pokemon_finder/stores/search.store.dart';
+import 'package:pokemon_finder/stores/user.store.dart';
 import 'package:pokemon_finder/views/widgets/PokemonTypesList.dart';
 import 'package:provider/provider.dart';
-import 'package:pokemon_finder/stores/user.store.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:mobx/mobx.dart';
 
 List<Pokemon> loadedList = [];
 
@@ -30,33 +26,10 @@ class _HomeViewState extends State<HomeView> {
     var homeStore = Provider.of<HomeStore>(context);
     var searchStore = Provider.of<SearchStore>(context);
 
-    final _controller = PokemonController();
+    final _pokemonController = PokemonController();
+
     TextEditingController _searchBoxTextController =
         new TextEditingController();
-
-    final userData = "Anderson";
-    final List<PokemonType> pokemonData = [
-      PokemonType(
-          name: "normal",
-          thumbnailImage:
-              "https://vortigo.blob.core.windows.net/files/pokemon/assets/fighting.png"),
-      PokemonType(
-          name: "fighting",
-          thumbnailImage:
-              "https://vortigo.blob.core.windows.net/files/pokemon/assets/normal.png"),
-      PokemonType(
-          name: "normal",
-          thumbnailImage:
-              "https://vortigo.blob.core.windows.net/files/pokemon/assets/fighting.png"),
-      PokemonType(
-          name: "fighting",
-          thumbnailImage:
-              "https://vortigo.blob.core.windows.net/files/pokemon/assets/normal.png"),
-      PokemonType(
-          name: "flying",
-          thumbnailImage:
-              "https://vortigo.blob.core.windows.net/files/pokemon/assets/flying.png")
-    ];
 
     return Scaffold(
         appBar: AppBar(
@@ -87,17 +60,25 @@ class _HomeViewState extends State<HomeView> {
           actions: [
             Observer(
               builder: (_) => IconButton(
-                  icon: searchStore.searchIcon,
+                  icon: Icon(searchStore.searchIcon),
                   onPressed: () {
-                    if (searchStore.searchBoxWidth != 0 &&
+                    if (searchStore.searchIcon == Icons.cancel) {
+                      homeStore.updateCurrentList(loadedList);
+                      searchStore.setSearchBoxIcon(Icons.search);
+                      searchStore.setSearchBoxWidth();
+                    } else if (searchStore.searchBoxWidth != 0 &&
                         _searchBoxTextController.text.isNotEmpty) {
                       List<Pokemon> filterResult =
-                          filterList(_searchBoxTextController.text, loadedList);
+                          _pokemonController.filterListToSearchedValue(
+                        _searchBoxTextController.text,
+                        loadedList,
+                      );
 
                       homeStore.updateCurrentList(filterResult);
-                      searchStore.setSearchBoxIcon(Icon(Icons.cancel));
+                      searchStore.setSearchBoxIcon(Icons.cancel);
+                    } else {
+                      searchStore.setSearchBoxWidth();
                     }
-                    searchStore.setSearchBoxWidth();
                   }),
             )
           ],
@@ -109,52 +90,41 @@ class _HomeViewState extends State<HomeView> {
           children: [
             Expanded(
               flex: 2,
-              child: PokemonTypesList(pokemonData: pokemonData),
+              child: PokemonTypesList(pokemonData: homeStore.typesList),
             ),
             Expanded(
               flex: 8,
               child: Observer(builder: (_) {
                 return PokemonList(
-                    controller: _controller, itemsList: homeStore.currentList);
+                    controller: _pokemonController,
+                    searchList: homeStore.currentList,
+                    itemsList: homeStore.typesList);
               }),
             )
           ],
         ));
   }
-
-  List<Pokemon> filterList(String query, List<Pokemon> listToSearch) {
-    List<Pokemon> resultFilter = listToSearch
-        .where((element) =>
-            element.name
-                .toString()
-                .toLowerCase()
-                .contains(query.toLowerCase()) ||
-            element.abilities
-                .toString()
-                .toLowerCase()
-                .contains(query.toLowerCase()) ||
-            element.type.toString().toLowerCase().contains(query.toLowerCase()))
-        .toList();
-
-    return resultFilter;
-  }
 }
 
 class PokemonList extends StatelessWidget {
-  const PokemonList(
-      {@required PokemonController controller,
-      @required List<Pokemon> itemsList})
-      : _controller = controller,
+  const PokemonList({
+    @required PokemonController controller,
+    @required List<Pokemon> searchList,
+    @required List<PokemonType> itemsList,
+  })  : _controller = controller,
+        _searchList = searchList,
         _itemsList = itemsList;
 
   final PokemonController _controller;
-  final List<Pokemon> _itemsList;
+  final List<Pokemon> _searchList;
+  final List<PokemonType> _itemsList;
 
   @override
   Widget build(BuildContext context) {
-    return _itemsList.isEmpty
+    return _searchList.isEmpty
         ? FutureBuilder(
-            future: _controller.getPokemonList(),
+            // future: _controller.getPokemonList(),
+            future: _controller.filterBySelectedTypes(_itemsList),
             builder: (context, snapshot) {
               switch (snapshot.connectionState) {
                 case ConnectionState.none:
@@ -192,9 +162,9 @@ class PokemonList extends StatelessWidget {
           )
         : ListView.builder(
             shrinkWrap: true,
-            itemCount: _itemsList.length,
+            itemCount: _searchList.length,
             itemBuilder: (context, i) {
-              Pokemon item = _itemsList[i];
+              Pokemon item = _searchList[i];
 
               return ListTile(
                 leading: CircleAvatar(

@@ -12,13 +12,13 @@ mixin _$SearchStore on _SearchStore, Store {
   final _$searchIconAtom = Atom(name: '_SearchStore.searchIcon');
 
   @override
-  Icon get searchIcon {
+  IconData get searchIcon {
     _$searchIconAtom.reportRead();
     return super.searchIcon;
   }
 
   @override
-  set searchIcon(Icon value) {
+  set searchIcon(IconData value) {
     _$searchIconAtom.reportWrite(value, super.searchIcon, () {
       super.searchIcon = value;
     });
@@ -68,7 +68,7 @@ mixin _$SearchStore on _SearchStore, Store {
   }
 
   @override
-  void setSearchBoxIcon(Icon icon) {
+  void setSearchBoxIcon(IconData icon) {
     final _$actionInfo = _$_SearchStoreActionController.startAction(
         name: '_SearchStore.setSearchBoxIcon');
     try {

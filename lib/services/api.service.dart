@@ -35,10 +35,19 @@ class Api implements PokemonInterface, PokemonTypesInterface {
   Future<List<PokemonType>> getPokemonTypesList() async {
     var response = await client.get(POKEMON_TYPES_URL);
 
-    final List parsed = json.decode(response.body);
-    List<PokemonType> list =
-        parsed.map((data) => PokemonType.fromJson(data)).toList();
+    if (response.statusCode == 200) {
+      Map<String, dynamic> rawJson = json.decode(response.body);
 
-    return list;
+      List<PokemonType> list;
+      try {
+        List parsed = rawJson["results"];
+        list = parsed.map((data) => PokemonType.fromJson(data)).toList();
+      } catch (e) {
+        print("ApiError - getTypes: " + e.toString());
+      }
+      return list;
+    } else {
+      throw ServerFailure();
+    }
   }
 }

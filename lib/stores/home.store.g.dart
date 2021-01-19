@@ -24,6 +24,21 @@ mixin _$HomeStore on _HomeStore, Store {
     });
   }
 
+  final _$typesListAtom = Atom(name: '_HomeStore.typesList');
+
+  @override
+  List<PokemonType> get typesList {
+    _$typesListAtom.reportRead();
+    return super.typesList;
+  }
+
+  @override
+  set typesList(List<PokemonType> value) {
+    _$typesListAtom.reportWrite(value, super.typesList, () {
+      super.typesList = value;
+    });
+  }
+
   final _$_HomeStoreActionController = ActionController(name: '_HomeStore');
 
   @override
@@ -38,9 +53,21 @@ mixin _$HomeStore on _HomeStore, Store {
   }
 
   @override
+  void updateTypesList(List<PokemonType> updatedList) {
+    final _$actionInfo = _$_HomeStoreActionController.startAction(
+        name: '_HomeStore.updateTypesList');
+    try {
+      return super.updateTypesList(updatedList);
+    } finally {
+      _$_HomeStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
-currentList: ${currentList}
+currentList: ${currentList},
+typesList: ${typesList}
     ''';
   }
 }

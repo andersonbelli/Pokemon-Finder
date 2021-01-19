@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:pokemon_finder/interfaces/pokemon.interface.dart';
 import 'package:pokemon_finder/models/pokemon.model.dart';
 import 'package:pokemon_finder/models/pokemon_type.model.dart';
@@ -17,6 +19,43 @@ class PokemonController implements PokemonInterface {
     return listPokemon;
   }
 
-  Future<List<PokemonType>> filterBySelectedTypes(
-      List<PokemonType> selectedTypes) async {}
+  Future<List<Pokemon>> filterBySelectedTypes(
+      List<PokemonType> selectedTypes) async {
+    List<Pokemon> listToConvert = await getPokemonList();
+
+    // TODO improve performance of this method
+
+    List<Pokemon> resultFilter = listToConvert.where((element) {
+      bool selected = false;
+
+      for (int i = 0; i < selectedTypes.length; i++) {
+        selected = element.type
+            .toString()
+            .toLowerCase()
+            .contains(selectedTypes[i].name.toLowerCase());
+      }
+
+      return selected;
+    }).toList();
+
+    return resultFilter;
+  }
+
+  List<Pokemon> filterListToSearchedValue(
+      String query, List<Pokemon> listToSearch) {
+    List<Pokemon> resultFilter = listToSearch
+        .where((element) =>
+            element.name
+                .toString()
+                .toLowerCase()
+                .contains(query.toLowerCase()) ||
+            element.abilities
+                .toString()
+                .toLowerCase()
+                .contains(query.toLowerCase()) ||
+            element.type.toString().toLowerCase().contains(query.toLowerCase()))
+        .toList();
+
+    return resultFilter;
+  }
 }
