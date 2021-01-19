@@ -68,6 +68,7 @@ class _SelectFavouritePokemonViewState
                 fit: BoxFit.fill)),
         child: Scaffold(
           key: _scaffoldKey,
+          resizeToAvoidBottomInset: false,
           backgroundColor: Colors.transparent,
           appBar: AppBar(
             backgroundColor: Colors.transparent,

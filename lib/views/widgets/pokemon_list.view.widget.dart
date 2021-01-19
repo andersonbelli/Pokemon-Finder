@@ -36,7 +36,7 @@ class PokemonList extends StatelessWidget {
                 case ConnectionState.active:
                   break;
                 case ConnectionState.done:
-                  homeStore.loadedList = snapshot.data;
+                  homeStore.updateLoadedList(snapshot.data);
 
                   return ListView.builder(
                       shrinkWrap: true,

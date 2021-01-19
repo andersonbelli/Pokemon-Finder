@@ -10,8 +10,6 @@ import 'package:pokemon_finder/views/widgets/pokemon_types_list.dart';
 import 'package:pokemon_finder/views/widgets/pokemon_list.view.widget.dart';
 import 'package:provider/provider.dart';
 
-List<Pokemon> loadedList = [];
-
 class HomeView extends StatefulWidget {
   @override
   _HomeViewState createState() => _HomeViewState();
@@ -33,6 +31,7 @@ class _HomeViewState extends State<HomeView> {
 
     return Scaffold(
         key: _scaffoldKey,
+        resizeToAvoidBottomInset: false,
         appBar: AppBar(
           centerTitle: true,
           title: Observer(
@@ -149,14 +148,14 @@ class _HomeViewState extends State<HomeView> {
       TextEditingController _searchBoxTextController,
       PokemonController _pokemonController) {
     if (searchStore.searchIcon == Icons.cancel) {
-      homeStore.updateCurrentList(loadedList);
+      homeStore.updateCurrentList(homeStore.loadedList);
       searchStore.setSearchBoxIcon(Icons.search);
       searchStore.setSearchBoxWidth();
     } else if (searchStore.searchBoxWidth != 0 &&
         _searchBoxTextController.text.isNotEmpty) {
       List<Pokemon> filterResult = _pokemonController.filterListToSearchedValue(
         _searchBoxTextController.text,
-        loadedList,
+        homeStore.loadedList,
       );
 
       if (filterResult.length == 0) {

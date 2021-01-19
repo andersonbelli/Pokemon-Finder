@@ -13,6 +13,11 @@ abstract class _HomeStore with Store {
   @observable
   List<Pokemon> loadedList = new List<Pokemon>().asObservable();
 
+  @action
+  void updateLoadedList(List<Pokemon> updatedList) {
+    this.loadedList = updatedList;
+  }
+
   @observable
   List<Pokemon> currentList = new List<Pokemon>().asObservable();
 

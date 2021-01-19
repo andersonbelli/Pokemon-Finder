@@ -87,6 +87,17 @@ mixin _$HomeStore on _HomeStore, Store {
   final _$_HomeStoreActionController = ActionController(name: '_HomeStore');
 
   @override
+  void updateLoadedList(List<Pokemon> updatedList) {
+    final _$actionInfo = _$_HomeStoreActionController.startAction(
+        name: '_HomeStore.updateLoadedList');
+    try {
+      return super.updateLoadedList(updatedList);
+    } finally {
+      _$_HomeStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   void updateCurrentList(List<Pokemon> updatedList) {
     final _$actionInfo = _$_HomeStoreActionController.startAction(
         name: '_HomeStore.updateCurrentList');

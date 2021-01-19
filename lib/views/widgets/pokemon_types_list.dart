@@ -22,7 +22,8 @@ class PokemonTypesList extends StatelessWidget {
         return SingleChildScrollView(
           child: Container(
             alignment: Alignment.centerLeft,
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            margin: const EdgeInsets.symmetric(vertical: 10.0),
+            padding: const EdgeInsets.symmetric(horizontal: 15.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -30,10 +31,12 @@ class PokemonTypesList extends StatelessWidget {
                   width: 70,
                   height: 70,
                   child: CircleAvatar(
+                    radius: 26,
                     backgroundColor: Colors.transparent,
                     backgroundImage: NetworkImage(item.thumbnailImage),
                   ),
                 ),
+                SizedBox(height: 5),
                 Text(
                   item.name,
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
