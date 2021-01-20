@@ -18,16 +18,14 @@ class HomeView extends StatefulWidget {
 class _HomeViewState extends State<HomeView> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
+  final _pokemonController = PokemonController();
+
+  TextEditingController _searchBoxTextController = new TextEditingController();
+
   @override
   Widget build(BuildContext context) {
-    var userStore = Provider.of<UserStore>(context);
     var homeStore = Provider.of<HomeStore>(context);
     var searchStore = Provider.of<SearchStore>(context);
-
-    final _pokemonController = PokemonController();
-
-    TextEditingController _searchBoxTextController =
-        new TextEditingController();
 
     return Scaffold(
         key: _scaffoldKey,
@@ -89,7 +87,7 @@ class _HomeViewState extends State<HomeView> {
           children: [
             Expanded(
               flex: 2,
-              child: PokemonTypesList(pokemonData: homeStore.typesList),
+              child: PokemonTypesListWidget(pokemonData: homeStore.typesList),
             ),
             Expanded(
               flex: 1,
@@ -146,10 +144,7 @@ class _HomeViewState extends State<HomeView> {
             Expanded(
               flex: 8,
               child: Observer(builder: (_) {
-                return PokemonList(
-                    controller: _pokemonController,
-                    searchList: homeStore.currentList,
-                    itemsList: homeStore.typesList);
+                return PokemonListWidget();
               }),
             )
           ],
@@ -165,7 +160,7 @@ class _HomeViewState extends State<HomeView> {
       homeStore.updateCurrentList(homeStore.loadedList);
       searchStore.setSearchBoxIcon(Icons.search);
       homeStore.changeListName("Pokemon");
-      searchStore.setSearchBoxWidth();
+      _searchBoxTextController.text = "";
     } else if (searchStore.searchBoxWidth != 0 &&
         _searchBoxTextController.text.isNotEmpty) {
       List<Pokemon> filterResult = _pokemonController.filterListToSearchedValue(
@@ -176,17 +171,20 @@ class _HomeViewState extends State<HomeView> {
       if (filterResult.length == 0) {
         showSnackBar(
             scaffoldKey: _scaffoldKey, message: 'Sorry, nothing was found 😔');
-        searchStore.setSearchBoxWidth();
+        searchStore.toggleSearchBox(false);
       } else {
         homeStore.updateCurrentList(filterResult);
         homeStore.changeListName("Search: ${_searchBoxTextController.text}");
         searchStore.setSearchBoxIcon(Icons.cancel);
-        searchStore.setSearchBoxWidth();
+        searchStore.toggleSearchBox(false);
       }
 
       FocusScope.of(context).unfocus();
+    } else if (searchStore.searchBoxWidth != 0 &&
+        _searchBoxTextController.text.isEmpty) {
+      searchStore.toggleSearchBox(false);
     } else {
-      searchStore.setSearchBoxWidth();
+      searchStore.toggleSearchBox(true);
     }
   }
 
@@ -194,5 +192,22 @@ class _HomeViewState extends State<HomeView> {
     final snackBar =
         SnackBar(backgroundColor: Colors.red.shade900, content: Text(message));
     scaffoldKey.currentState.showSnackBar(snackBar);
+  }
+
+  @override
+  void didChangeDependencies() {
+    var _homeStore = Provider.of<HomeStore>(context);
+    if (_homeStore.loadedList.length == 0) {
+      new Future.delayed(Duration.zero, () async {
+        final loadedList = await _pokemonController.loadHomeList(
+          _homeStore.typesList,
+          _homeStore.sortIcon == Icons.arrow_upward ? true : false,
+        );
+        _homeStore.updateLoadedList(loadedList);
+        _homeStore.updateCurrentList(loadedList);
+      });
+    }
+
+    super.didChangeDependencies();
   }
 }

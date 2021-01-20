@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:pokemon_finder/models/pokemon_type.model.dart';
 
-class PokemonTypesList extends StatelessWidget {
-  const PokemonTypesList({
+class PokemonTypesListWidget extends StatelessWidget {
+  const PokemonTypesListWidget({
     Key key,
     @required this.pokemonData,
   }) : super(key: key);

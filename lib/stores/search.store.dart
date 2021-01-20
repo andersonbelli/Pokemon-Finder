@@ -15,23 +15,17 @@ abstract class _SearchStore with Store {
   @observable
   double searchBoxWidth = 0;
 
-  @observable
-  List<Pokemon> searchedResult = new List<Pokemon>().asObservable();
-
   @action
-  void setSearchBoxWidth() {
-    this.searchBoxWidth == 0
-        ? this.searchBoxWidth = double.maxFinite
-        : this.searchBoxWidth = 0;
+  void toggleSearchBox(bool toggle) {
+    if (toggle) {
+      this.searchBoxWidth = double.maxFinite;
+    } else {
+      this.searchBoxWidth = 0;
+    }
   }
 
   @action
   void setSearchBoxIcon(IconData icon) {
     this.searchIcon = icon;
-  }
-
-  @action
-  void setSearchedResult(List<Pokemon> result) {
-    this.searchedResult = result;
   }
 }

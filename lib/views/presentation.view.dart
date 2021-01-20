@@ -31,8 +31,8 @@ class PresentationView extends StatelessWidget {
               ),
               color: Colors.pinkAccent.shade700,
               onPressed: () {
-                Navigator.pushReplacement(context,
-                    MaterialPageRoute(builder: (context) => AppView()));
+                Navigator.pushReplacement(
+                    context, MaterialPageRoute(builder: (context) => App()));
               },
             ),
           ),

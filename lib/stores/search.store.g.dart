@@ -39,29 +39,14 @@ mixin _$SearchStore on _SearchStore, Store {
     });
   }
 
-  final _$searchedResultAtom = Atom(name: '_SearchStore.searchedResult');
-
-  @override
-  List<Pokemon> get searchedResult {
-    _$searchedResultAtom.reportRead();
-    return super.searchedResult;
-  }
-
-  @override
-  set searchedResult(List<Pokemon> value) {
-    _$searchedResultAtom.reportWrite(value, super.searchedResult, () {
-      super.searchedResult = value;
-    });
-  }
-
   final _$_SearchStoreActionController = ActionController(name: '_SearchStore');
 
   @override
-  void setSearchBoxWidth() {
+  void toggleSearchBox(bool toggle) {
     final _$actionInfo = _$_SearchStoreActionController.startAction(
-        name: '_SearchStore.setSearchBoxWidth');
+        name: '_SearchStore.toggleSearchBox');
     try {
-      return super.setSearchBoxWidth();
+      return super.toggleSearchBox(toggle);
     } finally {
       _$_SearchStoreActionController.endAction(_$actionInfo);
     }
@@ -79,22 +64,10 @@ mixin _$SearchStore on _SearchStore, Store {
   }
 
   @override
-  void setSearchedResult(List<Pokemon> result) {
-    final _$actionInfo = _$_SearchStoreActionController.startAction(
-        name: '_SearchStore.setSearchedResult');
-    try {
-      return super.setSearchedResult(result);
-    } finally {
-      _$_SearchStoreActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
   String toString() {
     return '''
 searchIcon: ${searchIcon},
-searchBoxWidth: ${searchBoxWidth},
-searchedResult: ${searchedResult}
+searchBoxWidth: ${searchBoxWidth}
     ''';
   }
 }
