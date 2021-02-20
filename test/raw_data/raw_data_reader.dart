@@ -1,4 +1,4 @@
 import 'dart:io';
 
-String readder(String name) =>
+String readRawFile(String name) =>
     File('.\\test\\raw_data\\$name').readAsStringSync();

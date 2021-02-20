@@ -1,0 +1,28 @@
+{
+  "results": [
+    {
+      "thumbnailImage": "https://vortigo.blob.core.windows.net/files/pokemon/assets/fire.png",
+      "name": "fire"
+    },
+    {
+      "thumbnailImage": "https://vortigo.blob.core.windows.net/files/pokemon/assets/ice.png",
+      "name": "ice"
+    },
+    {
+      "thumbnailImage": "https://vortigo.blob.core.windows.net/files/pokemon/assets/flying.png",
+      "name": "flying"
+    },
+    {
+      "thumbnailImage": "https://vortigo.blob.core.windows.net/files/pokemon/assets/poison.png",
+      "name": "poison"
+    },
+    {
+      "thumbnailImage": "https://vortigo.blob.core.windows.net/files/pokemon/assets/grass.png",
+      "name": "grass"
+    },
+    {
+      "thumbnailImage": "https://vortigo.blob.core.windows.net/files/pokemon/assets/psychic.png",
+      "name": "psychic"
+    }
+  ]
+}
