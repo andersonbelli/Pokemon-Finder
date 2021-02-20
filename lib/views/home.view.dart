@@ -5,9 +5,8 @@ import 'package:pokemon_finder/controllers/pokemon.controller.dart';
 import 'package:pokemon_finder/models/pokemon.model.dart';
 import 'package:pokemon_finder/stores/home.store.dart';
 import 'package:pokemon_finder/stores/search.store.dart';
-import 'package:pokemon_finder/stores/user.store.dart';
-import 'package:pokemon_finder/views/widgets/pokemon_types_list.dart';
 import 'package:pokemon_finder/views/widgets/pokemon_list.view.widget.dart';
+import 'package:pokemon_finder/views/widgets/pokemon_types_list.dart';
 import 'package:provider/provider.dart';
 
 class HomeView extends StatefulWidget {
@@ -142,13 +141,80 @@ class _HomeViewState extends State<HomeView> {
             ),
             Divider(),
             Expanded(
-              flex: 8,
-              child: Observer(builder: (_) {
-                return PokemonListWidget();
-              }),
-            )
+                flex: 8,
+                child: Observer(builder: (_) {
+                  if (homeStore.homeListStatus is InitialHomeListStatus ||
+                      homeStore.homeListStatus is LoadingHomeListStatus) {
+                    return Center(
+                        child: CircularProgressIndicator(
+                            backgroundColor: Colors.pinkAccent.shade700));
+                  } else if (homeStore.homeListStatus is LoadedHomeListStatus) {
+                    return PokemonListWidget();
+                  } else if (homeStore.homeListStatus is ErrorHomeListStatus) {
+                    ErrorHomeListStatus error = homeStore.homeListStatus;
+                    return Center(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 12),
+                        child: Column(
+                          children: [
+                            Text(
+                              "Something went wrong recovering the list\n😔",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(fontSize: 18, height: 2),
+                            ),
+                            SizedBox(height: 12),
+                            RaisedButton(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8.0),
+                                  side: BorderSide(color: Colors.transparent)),
+                              child: Text(
+                                "Try again",
+                                style: TextStyle(
+                                    fontSize: 16, color: Colors.white),
+                              ),
+                              color: Colors.pinkAccent.shade700,
+                              onPressed: () {},
+                            )
+                          ],
+                        ),
+                      ),
+                    );
+                  }
+                  return Text("Unknown error :(");
+                }
+
+                    // homeStore.currentList.length == 0
+                    //     ? Center(child: CircularProgressIndicator())
+                    //     : PokemonListWidget(),
+                    ))
           ],
         ));
+  }
+
+  @override
+  void didChangeDependencies() {
+    var _homeStore = Provider.of<HomeStore>(context);
+
+    if (_homeStore.loadedList.length == 0) {
+      new Future.delayed(Duration.zero, () async {
+        final loadedList = await _pokemonController
+            .loadHomeList(
+          _homeStore.typesList,
+          _homeStore.sortIcon == Icons.arrow_upward ? true : false,
+        )
+            .catchError((e) {
+          return _homeStore.homeListStatus =
+              ErrorHomeListStatus(e.message.toString());
+        });
+
+        _homeStore.homeListStatus = LoadedHomeListStatus();
+        _homeStore.updateLoadedList(loadedList);
+        _homeStore.updateCurrentList(loadedList);
+      });
+    }
+
+    super.didChangeDependencies();
   }
 
   void makeASearch(
@@ -192,22 +258,5 @@ class _HomeViewState extends State<HomeView> {
     final snackBar =
         SnackBar(backgroundColor: Colors.red.shade900, content: Text(message));
     scaffoldKey.currentState.showSnackBar(snackBar);
-  }
-
-  @override
-  void didChangeDependencies() {
-    var _homeStore = Provider.of<HomeStore>(context);
-    if (_homeStore.loadedList.length == 0) {
-      new Future.delayed(Duration.zero, () async {
-        final loadedList = await _pokemonController.loadHomeList(
-          _homeStore.typesList,
-          _homeStore.sortIcon == Icons.arrow_upward ? true : false,
-        );
-        _homeStore.updateLoadedList(loadedList);
-        _homeStore.updateCurrentList(loadedList);
-      });
-    }
-
-    super.didChangeDependencies();
   }
 }

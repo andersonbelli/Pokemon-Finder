@@ -51,4 +51,36 @@ abstract class _HomeStore with Store {
         ? this.sortIcon = Icons.arrow_downward
         : this.sortIcon = Icons.arrow_upward;
   }
+
+  @observable
+  HomeListStatus homeListStatus = InitialHomeListStatus();
+}
+
+@immutable
+abstract class HomeListStatus {
+  const HomeListStatus();
+}
+
+@immutable
+class InitialHomeListStatus extends HomeListStatus {
+  const InitialHomeListStatus();
+}
+
+@immutable
+class LoadingHomeListStatus extends HomeListStatus {
+  const LoadingHomeListStatus();
+}
+
+@immutable
+class LoadedHomeListStatus extends HomeListStatus {
+  const LoadedHomeListStatus();
+}
+
+@immutable
+class ErrorHomeListStatus extends HomeListStatus {
+  final String _errorMessage;
+
+  get errorMessage => _errorMessage;
+
+  const ErrorHomeListStatus(this._errorMessage);
 }

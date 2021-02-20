@@ -84,6 +84,21 @@ mixin _$HomeStore on _HomeStore, Store {
     });
   }
 
+  final _$homeListStatusAtom = Atom(name: '_HomeStore.homeListStatus');
+
+  @override
+  HomeListStatus get homeListStatus {
+    _$homeListStatusAtom.reportRead();
+    return super.homeListStatus;
+  }
+
+  @override
+  set homeListStatus(HomeListStatus value) {
+    _$homeListStatusAtom.reportWrite(value, super.homeListStatus, () {
+      super.homeListStatus = value;
+    });
+  }
+
   final _$_HomeStoreActionController = ActionController(name: '_HomeStore');
 
   @override
@@ -148,7 +163,8 @@ loadedList: ${loadedList},
 currentList: ${currentList},
 typesList: ${typesList},
 listName: ${listName},
-sortIcon: ${sortIcon}
+sortIcon: ${sortIcon},
+homeListStatus: ${homeListStatus}
     ''';
   }
 }

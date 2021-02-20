@@ -4,7 +4,6 @@ import 'package:pokemon_finder/stores/home.store.dart';
 import 'package:pokemon_finder/stores/search.store.dart';
 import 'package:pokemon_finder/stores/user.store.dart';
 import 'package:pokemon_finder/views/presentation.view.dart';
-import 'package:pokemon_finder/views/register.view.dart';
 import 'package:provider/provider.dart';
 
 void main() {

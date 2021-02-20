@@ -19,7 +19,7 @@ class UserController implements UserInterface {
       }
       return true;
     } catch (e) {
-      throw e.toString();
+      print(e.toString());
       return false;
     }
   }

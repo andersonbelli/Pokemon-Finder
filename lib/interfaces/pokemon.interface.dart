@@ -1,5 +1,5 @@
-import 'package:pokemon_finder/models/pokemon.model.dart';
+import 'package:pokemon_finder/models/pokemon_list.model.dart';
 
 abstract class PokemonInterface {
-  Future<List<Pokemon>> getPokemonList();
+  Future<PokemonList> getPokemonList();
 }

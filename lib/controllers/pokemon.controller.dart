@@ -1,20 +1,16 @@
-import 'dart:convert';
-
+import 'package:http/http.dart' as http;
 import 'package:pokemon_finder/interfaces/pokemon.interface.dart';
 import 'package:pokemon_finder/models/pokemon.model.dart';
+import 'package:pokemon_finder/models/pokemon_list.model.dart';
 import 'package:pokemon_finder/models/pokemon_type.model.dart';
-
-import 'package:http/http.dart' as http;
-
-import 'package:meta/meta.dart';
 import 'package:pokemon_finder/services/api.service.dart';
 
 class PokemonController implements PokemonInterface {
   final Api api = Api(client: http.Client());
 
   @override
-  Future<List<Pokemon>> getPokemonList() async {
-    final List<Pokemon> listPokemon = await api.getPokemonList();
+  Future<PokemonList> getPokemonList() async {
+    final PokemonList listPokemon = await api.getPokemonList();
 
     return listPokemon;
   }
@@ -26,11 +22,11 @@ class PokemonController implements PokemonInterface {
 
   Future<List<Pokemon>> filterBySelectedTypes(
       List<PokemonType> selectedTypes) async {
-    List<Pokemon> listToConvert = await getPokemonList();
+    PokemonList listToConvert = await getPokemonList();
 
     // TODO improve performance of this method
 
-    List<Pokemon> resultFilter = listToConvert.where((element) {
+    List<Pokemon> resultFilter = listToConvert.pokemonList.where((element) {
       bool selected = false;
 
       for (int i = 0; i < selectedTypes.length; i++) {

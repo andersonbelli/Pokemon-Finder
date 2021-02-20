@@ -1,6 +1,7 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:pokemon_finder/views/app.view.dart';
-import 'package:pokemon_finder/views/register.view.dart';
 
 class PresentationView extends StatelessWidget {
   @override

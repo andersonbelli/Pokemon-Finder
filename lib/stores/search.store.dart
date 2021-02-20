@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
-import 'package:pokemon_finder/models/pokemon.model.dart';
 
 part 'search.store.g.dart';
 
