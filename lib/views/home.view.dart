@@ -42,6 +42,7 @@ class _HomeViewState extends State<HomeView> {
                     width: searchStore.searchBoxWidth,
                     height: 45,
                     child: TextField(
+                      key: Key("searchTextFieldKey"),
                       maxLines: 1,
                       inputFormatters: [
                         LengthLimitingTextInputFormatter(20),
@@ -102,6 +103,7 @@ class _HomeViewState extends State<HomeView> {
                           scrollDirection: Axis.horizontal,
                           child: Text(
                             homeStore.listName,
+                            key: Key("listNameTextKey"),
                             style: TextStyle(
                               fontSize: 18,
                               color: Colors.grey,
@@ -111,7 +113,7 @@ class _HomeViewState extends State<HomeView> {
                       ),
                     ),
                     FlatButton(
-                        key: Key("nameOrderButton"),
+                        key: Key("nameOrderButtonKey"),
                         child: Row(
                           children: [
                             Text(
@@ -213,6 +215,7 @@ class _HomeViewState extends State<HomeView> {
     super.didChangeDependencies();
   }
 
+  @visibleForTesting
   void makeASearch(
       SearchStore searchStore,
       HomeStore homeStore,

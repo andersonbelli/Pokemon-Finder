@@ -45,16 +45,21 @@ class PokemonController implements PokemonInterface {
   List<Pokemon> filterListToSearchedValue(
       String query, List<Pokemon> listToSearch) {
     List<Pokemon> resultFilter = listToSearch
-        .where((element) =>
-            element.name
-                .toString()
-                .toLowerCase()
-                .contains(query.toLowerCase()) ||
-            element.abilities
-                .toString()
-                .toLowerCase()
-                .contains(query.toLowerCase()) ||
-            element.type.toString().toLowerCase().contains(query.toLowerCase()))
+        .where(
+          (element) =>
+              element.name
+                  .toString()
+                  .toLowerCase()
+                  .contains(query.toLowerCase()) ||
+              element.type
+                  .toString()
+                  .toLowerCase()
+                  .contains(query.toLowerCase()) ||
+              element.abilities
+                  .toString()
+                  .toLowerCase()
+                  .contains(query.toLowerCase()),
+        )
         .toList();
 
     return resultFilter;

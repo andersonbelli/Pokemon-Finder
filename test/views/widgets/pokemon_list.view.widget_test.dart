@@ -42,8 +42,8 @@ void main() {
         expect(firstItemNameFinder, findsOneWidget);
 
         Text firstItemNameText = tester.firstWidget(firstItemNameFinder);
-        expect(firstItemNameText.data, firstItemNameFromJson);
-        expect(firstItemNameText.style.fontSize, 18);
+        expect(firstItemNameText.data, equals(firstItemNameFromJson));
+        expect(firstItemNameText.style.fontSize, equals(18));
       },
     );
   });
