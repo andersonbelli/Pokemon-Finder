@@ -7,12 +7,7 @@ import 'package:pokemon_finder/models/pokemon.model.dart';
 import 'package:pokemon_finder/stores/home.store.dart';
 import 'package:provider/provider.dart';
 
-class PokemonListWidget extends StatefulWidget {
-  @override
-  _PokemonListWidgetState createState() => _PokemonListWidgetState();
-}
-
-class _PokemonListWidgetState extends State<PokemonListWidget> {
+class PokemonListWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var homeStore = Provider.of<HomeStore>(context);
@@ -55,10 +50,9 @@ class _PokemonListWidgetState extends State<PokemonListWidget> {
                         ),
                         Container(
                           height: 80,
-                          child: Image.network(
-                            item.thumbnailImage,
-                            alignment: Alignment.center,
-                            fit: BoxFit.cover,
+                          child: FadeInImage.assetNetwork(
+                            placeholder: "assets/picachu.png",
+                            image: item.thumbnailImage,
                           ),
                         ),
                       ],
@@ -72,19 +66,6 @@ class _PokemonListWidgetState extends State<PokemonListWidget> {
                 )
               ],
             );
-
-            // return ListTile(
-            //   leading: CircleAvatar(
-            //     // backgroundColor: Colors.blue.shade100,
-            //     backgroundColor: Colors.transparent,
-            //     maxRadius: 23,
-            //     backgroundImage: NetworkImage(item.thumbnailImage),
-            //   ),
-            //   title: Text(
-            //     item.name,
-            //     style: TextStyle(fontSize: 18),
-            //   ),
-            // );
           }),
     );
   }
