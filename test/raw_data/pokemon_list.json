@@ -24,5 +24,55 @@
       "grass",
       "poison"
     ]
+  },
+  {
+    "abilities": [
+      "Thick Fat"
+    ],
+    "detailPageURL": "/us/pokedex/venusaur",
+    "weight": 342.8,
+    "weakness": [
+      "Fire",
+      "Psychic",
+      "Flying",
+      "Ice"
+    ],
+    "number": "003",
+    "height": 94.0,
+    "collectibles_slug": "venusaur",
+    "featured": "true",
+    "slug": "venusaur",
+    "name": "Venusaur",
+    "thumbnailAltText": "Venusaur",
+    "thumbnailImage": "https://assets.pokemon.com/assets/cms2/img/pokedex/detail/003.png",
+    "id": 3,
+    "type": [
+      "grass",
+      "poison"
+    ]
+  },
+  {
+    "abilities": [
+      "Blaze"
+    ],
+    "detailPageURL": "/us/pokedex/charmander",
+    "weight": 18.7,
+    "weakness": [
+      "Ground",
+      "Rock",
+      "Water"
+    ],
+    "number": "004",
+    "height": 24.0,
+    "collectibles_slug": "charmander",
+    "featured": "true",
+    "slug": "charmander",
+    "name": "Charmander",
+    "thumbnailAltText": "Charmander",
+    "thumbnailImage": "https://assets.pokemon.com/assets/cms2/img/pokedex/detail/004.png",
+    "id": 4,
+    "type": [
+      "fire"
+    ]
   }
 ]

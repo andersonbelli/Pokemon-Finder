@@ -28,7 +28,7 @@ void main() {
         PokemonList.fromJson(json.decode(readRawFile('pokemon_list.json')));
 
     test(
-        "should return the Pokemon List and first element must be equal to first element on json",
+        "Should return the Pokemon List and first element must be equal to first element on json",
         () async {
       when(mockHttpClient.get(any)).thenAnswer(
           (_) async => http.Response(readRawFile('pokemon_list.json'), 200));
@@ -41,7 +41,7 @@ void main() {
           equals(tPokemonListModel.pokemonList.first.id));
     });
 
-    test("should throw a ServerFailure when the statusCode isn't 200",
+    test("Should throw a ServerFailure when the statusCode isn't 200",
         () async {
       when(mockHttpClient.get(POKEMON_URL))
           .thenThrow(ServerFailure(message: "Error message"));
@@ -57,7 +57,7 @@ void main() {
         json.decode(readRawFile('pokemon_list_type.json'))["results"]);
 
     test(
-        "should return the Pokemon List and first element must be equal to first element on json",
+        "Should return the Pokemon List and first element must be equal to first element on json",
         () async {
       when(mockHttpClient.get(any)).thenAnswer((_) async =>
           http.Response(readRawFile('pokemon_list_type.json'), 200));
@@ -70,7 +70,7 @@ void main() {
           equals(tPokemonListTypeModel.pokemonTypesList.first.name));
     });
 
-    test("should throw a ServerFailure when the statusCode isn't 200",
+    test("Should throw a ServerFailure when the statusCode isn't 200",
         () async {
       when(mockHttpClient.get(POKEMON_TYPES_URL))
           .thenThrow(ServerFailure(message: "Error message"));

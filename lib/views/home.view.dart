@@ -111,6 +111,7 @@ class _HomeViewState extends State<HomeView> {
                       ),
                     ),
                     FlatButton(
+                        key: Key("nameOrderButton"),
                         child: Row(
                           children: [
                             Text(
@@ -182,12 +183,7 @@ class _HomeViewState extends State<HomeView> {
                     );
                   }
                   return Text("Unknown error :(");
-                }
-
-                    // homeStore.currentList.length == 0
-                    //     ? Center(child: CircularProgressIndicator())
-                    //     : PokemonListWidget(),
-                    ))
+                }))
           ],
         ));
   }

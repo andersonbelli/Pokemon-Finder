@@ -28,19 +28,14 @@ class PokemonListWidget extends StatelessWidget {
                       alignment: Alignment.center,
                       children: [
                         Container(
-                          // color: Colors.green,
                           child: Blob.fromID(
-                            // id: ['9-7-3291'],
                             id: [
                               '9-7-' + new Random().nextInt(9999).toString()
                             ],
                             size: 85,
                             styles: BlobStyles(
-                              // fillType: BlobFillType.stroke,
                               gradient: LinearGradient(
                                 colors: [
-                                  // Color(0xffe96443).withOpacity(0.5),
-                                  // Color(0xff904e95).withOpacity(0.5),
                                   Color(0xffc2185b).withOpacity(0.5),
                                   Color(0xff2ac6a1).withOpacity(0.5)
                                 ],
